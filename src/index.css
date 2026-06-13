@@ -1,0 +1,113 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+  body {
+    @apply bg-sia-dark text-slate-200 antialiased;
+    background-image: radial-gradient(
+        ellipse 80% 60% at 50% -10%,
+        rgba(25, 251, 107, 0.08),
+        transparent
+      ),
+      radial-gradient(ellipse 60% 50% at 100% 0%, rgba(25, 251, 107, 0.04), transparent);
+    background-attachment: fixed;
+  }
+}
+
+@layer components {
+  .panel {
+    @apply rounded-xl border border-sia-border bg-sia-panel/80 backdrop-blur;
+  }
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .btn-primary {
+    @apply btn bg-sia-green text-black hover:brightness-110;
+  }
+  .btn-ghost {
+    @apply btn border border-sia-border bg-transparent text-slate-200 hover:bg-white/5;
+  }
+  .btn-danger {
+    @apply btn border border-red-500/40 bg-red-500/10 text-red-300 hover:bg-red-500/20;
+  }
+  .chip {
+    @apply inline-flex items-center gap-1 rounded-full border border-sia-border px-2.5 py-0.5 text-xs text-sia-muted;
+  }
+  .label {
+    @apply text-xs font-medium uppercase tracking-wide text-sia-muted;
+  }
+  .input {
+    @apply w-full rounded-lg border border-sia-border bg-black/30 px-3 py-2 text-sm text-slate-100 outline-none focus:border-sia-green/60;
+  }
+}
+
+@layer components {
+  /* Rendered-markdown styling for the note viewer. */
+  .prose-note {
+    @apply text-sm leading-relaxed text-slate-200;
+  }
+  .prose-note h1 {
+    @apply mb-3 mt-5 text-xl font-semibold text-slate-100;
+  }
+  .prose-note h2 {
+    @apply mb-2 mt-5 text-lg font-semibold text-slate-100;
+  }
+  .prose-note h3 {
+    @apply mb-2 mt-4 text-base font-semibold text-slate-100;
+  }
+  .prose-note p {
+    @apply my-3;
+  }
+  .prose-note a {
+    @apply text-sia-green underline;
+  }
+  .prose-note ul {
+    @apply my-3 list-disc pl-6;
+  }
+  .prose-note ol {
+    @apply my-3 list-decimal pl-6;
+  }
+  .prose-note li {
+    @apply my-1;
+  }
+  .prose-note blockquote {
+    @apply my-3 border-l-2 border-sia-green/50 pl-4 italic text-sia-muted;
+  }
+  .prose-note code {
+    @apply rounded bg-black/40 px-1.5 py-0.5 font-mono text-[0.85em] text-sia-green;
+  }
+  .prose-note pre {
+    @apply my-3 overflow-x-auto rounded-lg bg-black/40 p-3;
+  }
+  .prose-note pre code {
+    @apply bg-transparent p-0 text-slate-200;
+  }
+  .prose-note hr {
+    @apply my-5 border-sia-border;
+  }
+  .prose-note table {
+    @apply my-3 w-full border-collapse text-sm;
+  }
+  .prose-note th,
+  .prose-note td {
+    @apply border border-sia-border px-3 py-1.5 text-left;
+  }
+  .prose-note img {
+    @apply my-3 max-w-full rounded-lg;
+  }
+}
+
+/* Thin scrollbars */
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+*::-webkit-scrollbar-thumb {
+  @apply rounded-full bg-sia-border;
+}
