@@ -18,7 +18,6 @@ import {
   type Sdk,
 } from '@siafoundation/sia-storage'
 import { APP_KEY_STORAGE, APP_META, INDEXER_URL } from './config'
-import type { ConceptId } from '../lib/concepts'
 
 export type Status =
   | 'loading-wasm'
@@ -37,10 +36,6 @@ interface SiaContextValue {
   approvalUrl: string | null
   /** Recovery phrase generated for a brand-new user (show once, then forget). */
   newPhrase: string | null
-
-  /** Concepts the user has exercised this session (for the live concept map). */
-  usedConcepts: Set<ConceptId>
-  markConcept: (...ids: ConceptId[]) => void
 
   /** Begin onboarding a NEW user: returns the recovery phrase to display. */
   beginRegistration: () => Promise<void>
@@ -62,42 +57,23 @@ export function SiaProvider({ children }: { children: ReactNode }) {
   const [publicKey, setPublicKey] = useState<string | null>(null)
   const [approvalUrl, setApprovalUrl] = useState<string | null>(null)
   const [newPhrase, setNewPhrase] = useState<string | null>(null)
-  const [usedConcepts, setUsedConcepts] = useState<Set<ConceptId>>(new Set())
 
   // Hold the in-flight Builder across the async approval handshake.
   const builderRef = useRef<Builder | null>(null)
 
-  const markConcept = useCallback((...ids: ConceptId[]) => {
-    setUsedConcepts((prev) => {
-      let changed = false
-      const next = new Set(prev)
-      for (const id of ids) {
-        if (!next.has(id)) {
-          next.add(id)
-          changed = true
-        }
-      }
-      return changed ? next : prev
-    })
-  }, [])
-
   // Promote a freshly obtained Sdk into connected state and load account info.
-  const adoptSdk = useCallback(
-    async (next: Sdk) => {
-      setSdk(next)
-      setPublicKey(next.appKey().publicKey())
-      setStatus('connected')
-      setApprovalUrl(null)
-      builderRef.current = null
-      markConcept('apps', 'indexers')
-      try {
-        setAccount(await next.account())
-      } catch {
-        // Account stats are non-critical for entering the app.
-      }
-    },
-    [markConcept],
-  )
+  const adoptSdk = useCallback(async (next: Sdk) => {
+    setSdk(next)
+    setPublicKey(next.appKey().publicKey())
+    setStatus('connected')
+    setApprovalUrl(null)
+    builderRef.current = null
+    try {
+      setAccount(await next.account())
+    } catch {
+      // Account stats are non-critical for entering the app.
+    }
+  }, [])
 
   // On mount: init WASM, then try a silent reconnect with a saved App Key.
   useEffect(() => {
@@ -205,8 +181,6 @@ export function SiaProvider({ children }: { children: ReactNode }) {
       publicKey,
       approvalUrl,
       newPhrase,
-      usedConcepts,
-      markConcept,
       beginRegistration,
       beginRegistrationWithPhrase,
       disconnect,
@@ -220,8 +194,6 @@ export function SiaProvider({ children }: { children: ReactNode }) {
       publicKey,
       approvalUrl,
       newPhrase,
-      usedConcepts,
-      markConcept,
       beginRegistration,
       beginRegistrationWithPhrase,
       disconnect,

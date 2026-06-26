@@ -16,5 +16,3 @@ export const APP_KEY_STORAGE = 'sia-notes.appKey'
 
 export const DEFAULT_DATA_SHARDS = Number(import.meta.env.VITE_DATA_SHARDS ?? 10)
 export const DEFAULT_PARITY_SHARDS = Number(import.meta.env.VITE_PARITY_SHARDS ?? 20)
-
-export const NOTE_MIME = 'text/markdown'
